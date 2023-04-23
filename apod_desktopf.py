@@ -78,7 +78,7 @@ def get_apod_date():
 
 api_key = 'UL19gOmIY49bDSfvVx2kbe8b4gWhbo4RMJoLptB0'
 apod_date = '2022-12-25'
-url = f'https://api.nasa.gov/planetary/apod?api_key={api_key}&apod_date={apod_date}&hd=True'
+apod_url = f'https://api.nasa.gov/planetary/apod?api_key={api_key}&apod_date={apod_date}&hd=True'
 
 get_params = {'api_key' :'UL19gOmIY49bDSfvVx2kbe8b4gWhbo4RMJoLptB0',
             'apod_date'
@@ -186,6 +186,18 @@ def add_apod_to_db(title, explanation, file_path, sha256):
         int: The ID of the newly inserted APOD record, if successful.  Zero, if unsuccessful       
     """
     # TODO: Complete function body
+
+    con = sqlite3.connect(image_cache_db)
+    cur = con.cursor
+    cur.execute("INSERT INTO apod_cache(title, explanation, file_path, sha256) VALUES (?, ?, ?, ?)",
+                    (title, explanation, file_path, sha256))
+    if id == cur.new_id:
+        con.commit
+        con.close
+        return id
+    else:
+        print('Failed to give APOD record into the database')
+
     return 0
 
 def get_apod_id_from_db(image_sha256):
@@ -200,6 +212,10 @@ def get_apod_id_from_db(image_sha256):
         int: Record ID of the APOD in the image cache DB, if it exists. Zero, if it does not.
     """
     # TODO: Complete function body
+    con = sqlite3.connect(image_cache_db)
+    cur = con.cursor()
+    cur.execute('SELECT ID FROM image_cache_db WHERE SHA256 = image_sha256')
+
     return 0
 
 def determine_apod_file_path(image_title, image_url):
@@ -228,7 +244,15 @@ def determine_apod_file_path(image_title, image_url):
         str: Full path at which the APOD image file must be saved in the image cache directory
     """
     # TODO: Complete function body
-    return
+
+    image_title = 'NGC 1333: Stellar Nursery in Perseus'
+    image_url = 'https://apod.nasa.gov/apod/image/2304/AuroraSnow_Casado_3000.jpg'
+    image_cache_dir = '/path/to/image/cache'
+    image_path = determine_apod_file_path(image_title, image_url, image_cache_dir)
+
+    print (image_lib)
+
+    return image_path
 
 def get_apod_info(image_id):
     """Gets the title, explanation, and full path of the APOD having a specified
@@ -241,6 +265,13 @@ def get_apod_info(image_id):
         dict: Dictionary of APOD information
     """
     # TODO: Query DB for image info
+    con = sqlite3.connect(image_cache_db)
+    cur = con.cursor
+
+    cur.execute(image_id)
+    cur.close
+
+
     # TODO: Put information into a dictionary
     apod_info = {
         #'title': , 
@@ -256,8 +287,10 @@ def get_all_apod_titles():
         list: Titles of all images in the cache
     """
     # TODO: Complete function body
+    title = get_all_apod_titles
+
     # NOTE: This function is only needed to support the APOD viewer GUI
-    return
+    return title
 
 if __name__ == '__main__':
     main()

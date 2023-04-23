@@ -9,6 +9,7 @@ import requests
 import sqlite3
 import ctypes
 import hashlib
+import image
 
 
 
@@ -82,7 +83,22 @@ def save_image_file(image_data, image_path):
         bytes: True, if succcessful. False, if unsuccessful
     """
     # TODO: Complete function body
-    return
+
+    if os.path.exists(image_path):
+        return True
+    else:
+        False
+
+    try:
+        open(image_path)
+        write(image_data) as binary: 
+    
+
+    except:
+        False    
+
+
+    
 
 def set_desktop_background_image(image_path):
     """Sets the desktop background image to a specific image.
@@ -107,7 +123,15 @@ def set_desktop_background_image(image_path):
         print("failure")
     return False
 
-def scale_image(image_size, max_size=(800, 600)):
+def scale_image(image_size, max_size=(800, 600)Args):
+    height, width = image_size
+    maximum_height, maximum_width = max_size
+    print(Args)
+
+    Args:
+    image_size (tuple[int, int]): image_size in pixels (width, height) 
+    max_size (tuple[int, int], optional): image_size in pixels (width, height)(800, 600)
+
     return
 
 def scale_image(image_size, max_size=(800, 600)):
